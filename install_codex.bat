@@ -29,9 +29,26 @@ for ($attempt = 1; $attempt -le 3; $attempt++) {
 }
 if (-not $payload.models -or $payload.models.Count -eq 0) { throw "NormaHub returned an empty or invalid model catalog." }
 
+function Test-SkipModel($item) {
+    $slug = ([string]$item.id).Trim().ToLowerInvariant()
+    if ($slug.StartsWith("claude") -or ($slug -split "-") -contains "claude") { return $true }
+    if ($slug.Contains("image")) { return $true }
+    $endpoints = @($item.endpoints)
+    foreach ($ep in $endpoints) {
+        if ($ep -and ([string]$ep).ToLowerInvariant().Contains("images")) { return $true }
+    }
+    $imagePrice = $item.pricing.image_price
+    if ($null -ne $imagePrice) {
+        $parsed = 0.0
+        if ([double]::TryParse([string]$imagePrice, [ref]$parsed) -and $parsed -gt 0) { return $true }
+    }
+    return $false
+}
+
 $priority = 0
 $models = @($payload.models | ForEach-Object {
     if (-not $_.id) { return }
+    if (Test-SkipModel $_) { return }
     $priority++
     $context = if ($_.context_window -is [ValueType] -and $_.context_window -gt 0) { [long]$_.context_window } else { $null }
     $modalities = if ($_.capabilities.vision) { @("text", "image") } else { @("text") }

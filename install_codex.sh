@@ -54,11 +54,33 @@ items = payload.get("models")
 if not isinstance(items, list) or not items:
     raise SystemExit("Error: NormaHub returned an empty or invalid model catalog.")
 
+def skip_model(model_id, item):
+    slug = model_id.strip().lower()
+    if slug.startswith("claude") or "claude" in slug.split("-"):
+        return True
+    if "image" in slug:
+        return True
+    endpoints = item.get("endpoints") if isinstance(item.get("endpoints"), list) else []
+    if any(isinstance(ep, str) and "images" in ep.lower() for ep in endpoints):
+        return True
+    pricing = item.get("pricing") if isinstance(item.get("pricing"), dict) else {}
+    image_price = pricing.get("image_price")
+    try:
+        if image_price is not None and float(image_price) > 0:
+            return True
+    except (TypeError, ValueError):
+        pass
+    return False
+
 catalog = []
-for priority, item in enumerate(items, 1):
+priority = 0
+for item in items:
     model_id = item.get("id") if isinstance(item, dict) else None
     if not isinstance(model_id, str) or not model_id.strip():
         continue
+    if skip_model(model_id, item):
+        continue
+    priority += 1
     context = item.get("context_window")
     context = context if isinstance(context, int) and context > 0 else None
     capabilities = item.get("capabilities")
