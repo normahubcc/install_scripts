@@ -92,7 +92,7 @@ for item in items:
     model = {
         "name": model_id,
         "modalities": {
-            "input": ["text", "image"] if capabilities.get("vision") else ["text"],
+            "input": ["text", "image"],
             "output": ["text"]
         }
     }

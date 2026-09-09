@@ -110,7 +110,7 @@ for item in items:
         "context_window": context,
         "max_context_window": context,
         "experimental_supported_tools": [],
-        "input_modalities": ["text", "image"] if capabilities.get("vision") else ["text"],
+        "input_modalities": ["text", "image"],
     })
 
 if not catalog:
