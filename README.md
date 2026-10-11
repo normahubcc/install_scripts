@@ -1,6 +1,16 @@
-# NormaHub Installation Scripts
+<p align="center">
+  <a href="https://normahub.cc">
+    <img src="https://raw.githubusercontent.com/normahubcc/.github/main/docs/images/logo.png" alt="NormaHub" width="120" />
+  </a>
+</p>
 
-Скрипты подключают AI-инструменты к [NormaHub API](https://normahub.cc).
+# NormaHub Setup Scripts
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux_|_macOS_|_Windows-blue.svg?style=flat-square)](#требования)
+[![NormaHub API](https://img.shields.io/badge/API-normahub.cc-6366f1.svg?style=flat-square)](https://normahub.cc)
+
+Скрипты быстрой настройки подключения AI-инструментов (Claude Code, Codex, OpenCode) к [NormaHub API](https://normahub.cc).
 
 ## Быстрый старт
 
